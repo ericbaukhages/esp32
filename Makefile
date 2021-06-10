@@ -15,3 +15,6 @@ uploadfs:
 
 update:
 	pio -f -c vim update
+
+listen:
+	pio device monitor
