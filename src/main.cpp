@@ -9,6 +9,8 @@
 
 #define CYCLE_BUTTON 34
 
+#define COUNTER_MIN 1
+#define COUNTER_MAX 9
 int counter;
 
 void setup()
@@ -16,7 +18,8 @@ void setup()
 	pinMode(CYCLE_BUTTON, INPUT);
 	segment::initialize();
 
-	counter = 0;
+	counter = COUNTER_MIN;
+	segment::update(counter);
 }
 
 void loop()
@@ -29,9 +32,9 @@ void loop()
 		counter++;
 		delay(300);
 
-		if (counter >= 16)
+		if (counter > COUNTER_MAX)
 		{
-			counter = 0;
+			counter = COUNTER_MIN;
 		}
 
 		segment::clear();
