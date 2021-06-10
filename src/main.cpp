@@ -23,17 +23,18 @@ void loop()
 {
 	int cycleButtonState = digitalRead(CYCLE_BUTTON);
 
+	// TODO: should this be replaced with an interrupt?
 	if (cycleButtonState == HIGH)
 	{
 		counter++;
 		delay(300);
-	}
 
-	if (counter >= 16)
-	{
-		counter = 0;
-	}
+		if (counter >= 16)
+		{
+			counter = 0;
+		}
 
-	segment::clear();
-	segment::update(counter);
+		segment::clear();
+		segment::update(counter);
+	}
 }
