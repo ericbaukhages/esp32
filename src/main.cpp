@@ -26,7 +26,7 @@ void loop()
 	if (cycleButtonState == HIGH)
 	{
 		counter++;
-		delay(150);
+		delay(300);
 	}
 
 	if (counter >= 16)
