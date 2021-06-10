@@ -1,63 +1,45 @@
 #include "Arduino.h"
 #include "segment.h"
 
-#define LED_SEGMENT_A 4
-#define LED_SEGMENT_B 5
-#define LED_SEGMENT_C 12
-#define LED_SEGMENT_D 13
-#define LED_SEGMENT_E 14
-#define LED_SEGMENT_F 18
-#define LED_SEGMENT_G 19
-#define LED_SEGMENT_DP 21
+#define LATCH_PIN 12
+#define CLOCK_PIN 13
+#define DATA_PIN 14
 
-int segments [8] = {
-  LED_SEGMENT_A,
-  LED_SEGMENT_B,
-  LED_SEGMENT_C,
-  LED_SEGMENT_D,
-  LED_SEGMENT_E,
-  LED_SEGMENT_F,
-  LED_SEGMENT_G,
-  LED_SEGMENT_DP,
+byte numberToSegments[] = {
+	0b11111100, /* 0 */
+	0b01100000, /* 1 */
+	0b11011010, /* 2 */
+	0b11110010, /* 3 */
+	0b01100110, /* 4 */
+	0b10110110, /* 5 */
+	0b10111110, /* 6 */
+	0b11100000, /* 7 */
+	0b11111110, /* 8 */
+	0b11100110, /* 9 */
+	0b11101110, /* A */
+	0b00111110, /* B */
+	0b10011100, /* C */
+	0b01111010, /* D */
+	0b10011110, /* E */
+	0b10001110, /* F */
 };
 
-int numbers [16][7] = {
-  /*   A     B     C     D     E     F     G */
-  { HIGH, HIGH, HIGH, HIGH, HIGH, HIGH,  LOW }, /* 0 */
-  {  LOW, HIGH, HIGH,  LOW,  LOW,  LOW,  LOW }, /* 1 */
-  { HIGH, HIGH,  LOW, HIGH, HIGH,  LOW, HIGH }, /* 2 */
-  { HIGH, HIGH, HIGH, HIGH,  LOW,  LOW, HIGH }, /* 3 */
-  {  LOW, HIGH, HIGH,  LOW,  LOW, HIGH, HIGH }, /* 4 */
-  { HIGH,  LOW, HIGH, HIGH,  LOW, HIGH, HIGH }, /* 5 */
-  { HIGH,  LOW, HIGH, HIGH, HIGH, HIGH, HIGH }, /* 6 */
-  { HIGH, HIGH, HIGH,  LOW,  LOW,  LOW,  LOW }, /* 7 */
-  { HIGH, HIGH, HIGH, HIGH, HIGH, HIGH, HIGH }, /* 8 */
-  { HIGH, HIGH, HIGH,  LOW,  LOW, HIGH, HIGH }, /* 9 */
-  { HIGH, HIGH, HIGH,  LOW, HIGH, HIGH, HIGH }, /* A */
-  {  LOW,  LOW, HIGH, HIGH, HIGH, HIGH, HIGH }, /* B */
-  { HIGH,  LOW,  LOW, HIGH, HIGH, HIGH,  LOW }, /* C */
-  {  LOW, HIGH, HIGH, HIGH, HIGH,  LOW, HIGH }, /* D */
-  { HIGH,  LOW,  LOW, HIGH, HIGH, HIGH, HIGH }, /* E */
-  { HIGH,  LOW,  LOW,  LOW, HIGH, HIGH, HIGH }, /* F */
-};
-
-void writeNumberToSegment(int index)
+void segment::initialize()
 {
-  for (int i = 0; i < 7; i++) {
-    digitalWrite(segments[i], numbers[index][i]);
-  }
+	pinMode(LATCH_PIN, OUTPUT);
+	pinMode(DATA_PIN, OUTPUT);
+	pinMode(CLOCK_PIN, OUTPUT);
 }
 
-void clearSegment()
+void segment::update(byte number)
 {
-  for (int i = 0; i < 7; i++) {
-    digitalWrite(segments[i], LOW);
-  }
+	// TODO: number needs to be 0 - 15 only for this segment display
+	digitalWrite(LATCH_PIN, LOW);
+	shiftOut(DATA_PIN, CLOCK_PIN, LSBFIRST, numberToSegments[number]);
+	digitalWrite(LATCH_PIN, HIGH);
 }
 
-void initializeSegments()
+void segment::clear()
 {
-  for (int i = 0; i < 8; i++) {
-    pinMode(segments[i], OUTPUT);
-  }
+	segment::update(0b00000000);
 }

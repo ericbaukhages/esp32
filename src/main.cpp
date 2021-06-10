@@ -13,27 +13,27 @@ int counter;
 
 void setup()
 {
-  pinMode(CYCLE_BUTTON, INPUT_PULLUP);
-  initializeSegments();
+	pinMode(CYCLE_BUTTON, INPUT);
+	segment::initialize();
 
-  counter = 0;
+	counter = 0;
 }
 
 void loop()
 {
-  int cycleButtonState = digitalRead(CYCLE_BUTTON);
+	int cycleButtonState = digitalRead(CYCLE_BUTTON);
 
-  if (cycleButtonState == HIGH)
-  {
-    counter++;
-    delay(150);
-  }
+	if (cycleButtonState == HIGH)
+	{
+		counter++;
+		delay(150);
+	}
 
-  if (counter >= 16)
-  {
-    counter = 0;
-  }
+	if (counter >= 16)
+	{
+		counter = 0;
+	}
 
-  clearSegment();
-  writeNumberToSegment(counter);
+	segment::clear();
+	segment::update(counter);
 }
